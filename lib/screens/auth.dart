@@ -17,6 +17,7 @@ class _AuthScreenState extends State<AuthScreen> {
   var _isSignedIn = true;
   var _enteredEmail = "";
   var _enteredPassword = "";
+  var _confirmPassword = "";
 
   void _submitForm() async {
     final isValid = _form.currentState!.validate();
@@ -44,7 +45,9 @@ class _AuthScreenState extends State<AuthScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.primaryContainer,
-      body: Center(
+      body: Container(
+        padding: EdgeInsets.only(top: 56),
+        alignment: Alignment.topCenter,
         child: SingleChildScrollView(
           child: Column(
             children: [
@@ -66,6 +69,23 @@ class _AuthScreenState extends State<AuthScreen> {
                           spacing: 20,
                           mainAxisSize: MainAxisSize.min,
                           children: [
+                            Column(
+                              spacing: 8,
+                              children: [
+                                Text(
+                                  _isSignedIn ? "Welcome back!" : "Welcome",
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .headlineMedium,
+                                ),
+                                Text(
+                                  _isSignedIn
+                                      ? "Enter your credentials to continue."
+                                      : "Create an account to continue.",
+                                  style: Theme.of(context).textTheme.bodyMedium,
+                                ),
+                              ],
+                            ),
                             TextFormField(
                               decoration: InputDecoration(
                                 labelText: "Email",
@@ -106,7 +126,26 @@ class _AuthScreenState extends State<AuthScreen> {
                               onSaved: (value) {
                                 _enteredPassword = value!.trim();
                               },
+                              onChanged: (value) {
+                                _confirmPassword = value;
+                              },
                             ),
+                            if (!_isSignedIn)
+                              TextFormField(
+                                decoration: InputDecoration(
+                                  labelText: "Confirm password",
+                                  border: OutlineInputBorder(),
+                                ),
+                                validator: (value) {
+                                  if (value != _confirmPassword) {
+                                    return "It doesn't match with the password";
+                                  }
+
+                                  // Add more validation if needed
+                                  return null;
+                                },
+                                obscureText: true,
+                              ),
                             Column(
                               spacing: 8,
                               children: [

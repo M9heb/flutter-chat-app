@@ -53,10 +53,11 @@ class DefaultFirebaseOptions {
   }
 
   static const FirebaseOptions android = FirebaseOptions(
-    apiKey: 'AIzaSyBexewJg5Q8PupG-BkPLuwOiWRCnEzy5l8',
-    appId: '1:915946093612:android:3db8c2a98c9ffad6866589',
+    apiKey: 'AIzaSyAOdnUsl3_xOUouuVBrzRsUS3cZmQCyH68',
+    appId: '1:797626337409:android:e942d2828f498eb0e06580',
     messagingSenderId: '797626337409',
-    projectId: 'mchat2-6f791',
+    projectId: 'flutter-chat-app-cdb36',
     storageBucket: 'flutter-chat-app-cdb36.firebasestorage.app',
   );
+
 }

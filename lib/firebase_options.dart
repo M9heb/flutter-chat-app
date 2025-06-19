@@ -17,29 +17,17 @@ import 'package:flutter/foundation.dart'
 class DefaultFirebaseOptions {
   static FirebaseOptions get currentPlatform {
     if (kIsWeb) {
-      throw UnsupportedError(
-        'DefaultFirebaseOptions have not been configured for web - '
-        'you can reconfigure this by running the FlutterFire CLI again.',
-      );
+      return web;
     }
     switch (defaultTargetPlatform) {
       case TargetPlatform.android:
         return android;
       case TargetPlatform.iOS:
-        throw UnsupportedError(
-          'DefaultFirebaseOptions have not been configured for ios - '
-          'you can reconfigure this by running the FlutterFire CLI again.',
-        );
+        return ios;
       case TargetPlatform.macOS:
-        throw UnsupportedError(
-          'DefaultFirebaseOptions have not been configured for macos - '
-          'you can reconfigure this by running the FlutterFire CLI again.',
-        );
+        return macos;
       case TargetPlatform.windows:
-        throw UnsupportedError(
-          'DefaultFirebaseOptions have not been configured for windows - '
-          'you can reconfigure this by running the FlutterFire CLI again.',
-        );
+        return windows;
       case TargetPlatform.linux:
         throw UnsupportedError(
           'DefaultFirebaseOptions have not been configured for linux - '
@@ -53,11 +41,47 @@ class DefaultFirebaseOptions {
   }
 
   static const FirebaseOptions android = FirebaseOptions(
-    apiKey: 'AIzaSyAOdnUsl3_xOUouuVBrzRsUS3cZmQCyH68',
-    appId: '1:797626337409:android:e942d2828f498eb0e06580',
-    messagingSenderId: '797626337409',
-    projectId: 'flutter-chat-app-cdb36',
-    storageBucket: 'flutter-chat-app-cdb36.firebasestorage.app',
+    apiKey: 'AIzaSyBexewJg5Q8PupG-BkPLuwOiWRCnEzy5l8',
+    appId: '1:915946093612:android:0453aec6e0e8720a866589',
+    messagingSenderId: '915946093612',
+    projectId: 'mchat2-6f791',
+    storageBucket: 'mchat2-6f791.appspot.com',
+  );
+
+  static const FirebaseOptions web = FirebaseOptions(
+    apiKey: 'AIzaSyAQnxFZyo2HvyalnN2hz39yj-5YW0Zs2l4',
+    appId: '1:915946093612:web:686b2364f1a28056866589',
+    messagingSenderId: '915946093612',
+    projectId: 'mchat2-6f791',
+    authDomain: 'mchat2-6f791.firebaseapp.com',
+    storageBucket: 'mchat2-6f791.appspot.com',
+  );
+
+  static const FirebaseOptions macos = FirebaseOptions(
+    apiKey: 'AIzaSyDlVvTMyTdUt2c0htFvuMScWwgHXCUllgA',
+    appId: '1:915946093612:ios:3a6a92c1c936f731866589',
+    messagingSenderId: '915946093612',
+    projectId: 'mchat2-6f791',
+    storageBucket: 'mchat2-6f791.appspot.com',
+    iosBundleId: 'com.example.chatApp',
+  );
+
+  static const FirebaseOptions ios = FirebaseOptions(
+    apiKey: 'AIzaSyDlVvTMyTdUt2c0htFvuMScWwgHXCUllgA',
+    appId: '1:915946093612:ios:3a6a92c1c936f731866589',
+    messagingSenderId: '915946093612',
+    projectId: 'mchat2-6f791',
+    storageBucket: 'mchat2-6f791.appspot.com',
+    iosBundleId: 'com.example.chatApp',
+  );
+
+  static const FirebaseOptions windows = FirebaseOptions(
+    apiKey: 'AIzaSyBwVlESBHazhO6ThOa7i4IOP7bEph94YA4',
+    appId: '1:915946093612:web:6b6849c90d0165f6866589',
+    messagingSenderId: '915946093612',
+    projectId: 'mchat2-6f791',
+    authDomain: 'mchat2-6f791.firebaseapp.com',
+    storageBucket: 'mchat2-6f791.appspot.com',
   );
 
 }

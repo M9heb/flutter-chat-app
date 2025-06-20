@@ -22,11 +22,17 @@ class _AuthScreenState extends State<AuthScreen> {
   var _enteredEmail = "";
   var _enteredPassword = "";
   var _confirmPassword = "";
+  var _isLoading = false;
   File? _pickedImage;
   void _submitForm() async {
     final isValid = _form.currentState!.validate();
-
+    setState(() {
+      _isLoading = true;
+    });
     if (!isValid) {
+      setState(() {
+        _isLoading = false;
+      });
       return;
     }
     if (!_isSignedIn && _pickedImage == null) {
@@ -36,6 +42,9 @@ class _AuthScreenState extends State<AuthScreen> {
         "Set your avatar image to continue.",
         style: TextStyle(color: Theme.of(context).colorScheme.errorContainer),
       )));
+      setState(() {
+        _isLoading = false;
+      });
       return;
     }
 
@@ -61,6 +70,9 @@ class _AuthScreenState extends State<AuthScreen> {
       ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text(error.message ?? "Authentication failed.")));
     }
+    setState(() {
+      _isLoading = false;
+    });
   }
 
   @override
@@ -116,6 +128,7 @@ class _AuthScreenState extends State<AuthScreen> {
                                 },
                               ),
                             TextFormField(
+                              enabled: !_isLoading ? true : false,
                               decoration: InputDecoration(
                                 labelText: "Email",
                                 border: OutlineInputBorder(),
@@ -137,6 +150,7 @@ class _AuthScreenState extends State<AuthScreen> {
                               },
                             ),
                             TextFormField(
+                              enabled: !_isLoading ? true : false,
                               decoration: InputDecoration(
                                 labelText: "Password",
                                 border: OutlineInputBorder(),
@@ -161,6 +175,7 @@ class _AuthScreenState extends State<AuthScreen> {
                             ),
                             if (!_isSignedIn)
                               TextFormField(
+                                enabled: !_isLoading ? true : false,
                                 decoration: InputDecoration(
                                   labelText: "Confirm password",
                                   border: OutlineInputBorder(),
@@ -181,29 +196,52 @@ class _AuthScreenState extends State<AuthScreen> {
                                 SizedBox(
                                   height: 48,
                                   width: double.infinity,
-                                  child: ElevatedButton(
-                                      style: ButtonStyle(
-                                          shape: WidgetStatePropertyAll<
-                                                  RoundedRectangleBorder>(
-                                              RoundedRectangleBorder(
-                                                  borderRadius: BorderRadius.circular(
-                                                      8))),
-                                          backgroundColor:
-                                              WidgetStatePropertyAll<Color>(
-                                                  Theme.of(context)
-                                                      .colorScheme
-                                                      .primary)),
-                                      onPressed: _submitForm,
-                                      child: Text(
-                                          _isSignedIn ? "Sign in" : "Create account",
-                                          style: TextStyle(color: Theme.of(context).colorScheme.onPrimary))),
+                                  child: ElevatedButton.icon(
+                                    style: ButtonStyle(
+                                        shape: WidgetStatePropertyAll<
+                                                RoundedRectangleBorder>(
+                                            RoundedRectangleBorder(
+                                                borderRadius:
+                                                    BorderRadius.circular(8))),
+                                        backgroundColor:
+                                            WidgetStatePropertyAll<Color>(
+                                                !_isLoading
+                                                    ? Theme.of(context)
+                                                        .colorScheme
+                                                        .primary
+                                                    : Colors.grey)),
+                                    onPressed: !_isLoading ? _submitForm : null,
+                                    label: Text(
+                                      _isSignedIn
+                                          ? "Sign in"
+                                          : "Create account",
+                                      style: TextStyle(
+                                          color: Theme.of(context)
+                                              .colorScheme
+                                              .onPrimary),
+                                    ),
+                                    icon: _isLoading
+                                        ? SizedBox(
+                                            width: 20,
+                                            height: 20,
+                                            child: CircularProgressIndicator(
+                                              strokeCap: StrokeCap.round,
+                                              color: Theme.of(context)
+                                                  .colorScheme
+                                                  .onPrimary,
+                                            ),
+                                          )
+                                        : null,
+                                  ),
                                 ),
                                 TextButton(
-                                    onPressed: () {
-                                      setState(() {
-                                        _isSignedIn = !_isSignedIn;
-                                      });
-                                    },
+                                    onPressed: !_isLoading
+                                        ? () {
+                                            setState(() {
+                                              _isSignedIn = !_isSignedIn;
+                                            });
+                                          }
+                                        : null,
                                     child: Text(_isSignedIn
                                         ? "Create account"
                                         : "Login instead")),

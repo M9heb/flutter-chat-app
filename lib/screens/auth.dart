@@ -1,4 +1,8 @@
+import 'dart:io';
+
+import 'package:chat_app/widgets/user_image_picker.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 
 final _firebase = FirebaseAuth.instance;
@@ -18,13 +22,23 @@ class _AuthScreenState extends State<AuthScreen> {
   var _enteredEmail = "";
   var _enteredPassword = "";
   var _confirmPassword = "";
-
+  File? _pickedImage;
   void _submitForm() async {
     final isValid = _form.currentState!.validate();
 
     if (!isValid) {
       return;
     }
+    if (!_isSignedIn && _pickedImage == null) {
+      ScaffoldMessenger.of(context).clearSnackBars();
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: Text(
+        "Set your avatar image to continue.",
+        style: TextStyle(color: Theme.of(context).colorScheme.errorContainer),
+      )));
+      return;
+    }
+
     _form.currentState!.save();
     try {
       if (_isSignedIn) {
@@ -33,6 +47,14 @@ class _AuthScreenState extends State<AuthScreen> {
       } else {
         final userCredentials = await _firebase.createUserWithEmailAndPassword(
             email: _enteredEmail, password: _enteredPassword);
+
+        final storageRef = FirebaseStorage.instance
+            .ref()
+            .child("user_images")
+            .child("${userCredentials.user!.uid}.jpg");
+
+        await storageRef.putFile(_pickedImage!);
+        final imageURL = await storageRef.getDownloadURL();
       }
     } on FirebaseAuthException catch (error) {
       ScaffoldMessenger.of(context).clearSnackBars();
@@ -59,7 +81,8 @@ class _AuthScreenState extends State<AuthScreen> {
                         "assets/images/chat.png",
                       ))),
               Card(
-                margin: const EdgeInsets.only(top: 24, left: 16, right: 16),
+                margin: const EdgeInsets.only(
+                    top: 24, bottom: 24, left: 16, right: 16),
                 child: SingleChildScrollView(
                   child: Padding(
                     padding: const EdgeInsets.all(16),
@@ -86,6 +109,12 @@ class _AuthScreenState extends State<AuthScreen> {
                                 ),
                               ],
                             ),
+                            if (!_isSignedIn)
+                              UserImagePicker(
+                                onPickedImage: (pickedImage) {
+                                  _pickedImage = pickedImage;
+                                },
+                              ),
                             TextFormField(
                               decoration: InputDecoration(
                                 labelText: "Email",
